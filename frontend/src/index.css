@@ -64,3 +64,20 @@ thead tr {
   margin: auto;
   text-align: center;
 }
+#text-titulo{
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  font-size: 30px;
+  text-align: center;
+  color:#383be9
+}
+#text-titulo1{
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 25px;
+  text-align: left;
+  color:#383be9
+}
+#text-parrafo1{
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  color:#1f3f05
+}

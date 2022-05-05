@@ -1,5 +1,6 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import { Button, Card, Col, Container, Form, Modal, Row } from 'react-bootstrap'
 
 const Login = () => {
@@ -10,12 +11,29 @@ const Login = () => {
 	const [show, setShow] = useState(false);
 	const [mensaje, setMensaje] = useState('');
 	const [color, setColor] = useState(''); 
+	const navigate = useNavigate();
+	const [isAuth, setIsAuth] = useState(false);
 
 	/* Cierra el dialogo Modal */
 	const handleClose = () => {
     	setShow(false);
 	}
+  
 
+	const handleLogout = async() =>{
+		try{
+			const respuesta = await axios.post('/auth/logout/',{})
+			const { status } = respuesta
+			//console.log(respuesta)
+			if (status === 200){
+				localStorage.removeItem('nombre');
+				setIsAuth(false);
+				navigate('/Login/');
+			}
+		}catch (err) {
+			console.log(err)
+		} 
+	};
 	/* Autenticacion basica con Login */
 	const AddTodoHandler = async (e) => {
 		e.preventDefault()
@@ -23,16 +41,18 @@ const Login = () => {
 			username,
 			password,
 		})
-		/*console.log(autUser)*/
+		console.log(autUser)
 		try{
 			const respuesta = await axios.post('/auth/login/', autUser, {withCredentials: true})
 			const { status } = respuesta
 			if (status === 200){
 				localStorage.setItem('nombre', username)
+				console.log(username)
 				//setColor('success')
 				//setMensaje('..USUARIO AUTENTICADO SATISFACTORIAMENTE..')
-			//setShow(true)
-            window.location.href="/GestionEmpresa/";
+				//setShow(true)
+				navigate('/GestionEmpresa');
+            	//window.location.href='/GestionEmpresa';
 			}
 			
 		}catch (err) {
@@ -42,9 +62,10 @@ const Login = () => {
 			setShow(true)
 		}
 		//window.location.reload();
-		//window.location.href="/municipios/";
 	}
-	
+	useEffect(() => {
+        handleLogout()
+        }, []);
 	/*formulario para ingresar datos a grabar en la base de datos*/
     return (
 		<div className='wrapper'>

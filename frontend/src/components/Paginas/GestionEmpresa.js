@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Button, Modal, FormControl, Card, Col, Row } from 'react-bootstrap'
+import { useNavigate } from "react-router-dom";
+import { Form, Button, Modal, Col, Row } from 'react-bootstrap'
 import axios from 'axios'
-import { FaTrashAlt} from "react-icons/fa"
-import { FaPencilAlt } from "react-icons/fa"
 import { FaEdit } from "react-icons/fa"
+import MaterialTable from "material-table";
+import tableIcons from "./MaterialTableIcons";
 
 
 const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, telefono, correo, web, cedula, nombre_rep, tipo_empresa,
@@ -12,6 +13,17 @@ const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, 
     const [lista, setLista] = useState([])
     const [data, setData]= useState([]);
     const [show, setShow] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const navigate = useNavigate();
+
+    const columns= [
+      { title: 'NIT', field: 'nit' },
+      { title: 'RAZON SOCIAL', field: 'razon_social' },
+      { title: 'DIRECCION', field: 'direccion' },
+      { title: 'MUNICIPIO', field: 'municipio' },
+      { title: 'NOMBRE REPRESENTANTE', field: 'nombre_rep' },
+      { title: 'RESPONSABLE DGA', field: 'nombre_dga' },
+    ];
 
     const [newNit, setNit] = useState(nit)
     const [newCiuu, setCiuu] = useState(ciuu)
@@ -36,25 +48,24 @@ const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, 
     const [newEmail_dga, setEmail_dga] = useState(email_dga)
     const [newFecha_regdga, setFecha_regdga] = useState(fecha_regdga)
 
-    
-
     //const [usuarios, setUsuarios]= useState([]);
     const [tablaUsuarios, setTablaUsuarios]= useState([]);
     const [busqueda, setBusqueda]= useState("");
-    //const loginBody = {"username": "sigcvs", "password": "cvs2021."}
     const getLista = async () => {
 		try {
-      //console.log(loginBody)
-			const response = await axios.get('/empresas/')
+			const response = await axios.get('/api/empresas/')
       console.log(response)
 			const { data } = response
 			setLista(data)
+      setData(data)
       setTablaUsuarios(data)
+
 		} catch (err) {
 			console.log(err)
 		}
 	} 
 
+  ///*****funcion para buscar y filtar datos ingesados en un inputtext****///
   const handleChangeBuscar=e=>{
       setBusqueda(e.target.value);
       console.log(e.target.value)
@@ -70,14 +81,15 @@ const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, 
       }
     });
     setLista(resultadosBusqueda)
-    //setUsuarios(resultadosBusqueda);
   }
+  ///************************************************////////
 
-    /*Muestra la informacion a editar en el formulario MODAL*/
-    const handleShow = async (nit, razon_social, municipio, direccion, telefono, correo, cedula, nombre_rep, tipo_empresa ) => {
+
+  /*Muestra la informacion a editar en el formulario MODAL*/
+  const handleShow = async (nit, razon_social, municipio, direccion, telefono, correo, cedula, nombre_rep, tipo_empresa ) => {
         
       try {
-        const respuesta = await axios.get('/empresas/'+nit+'/')
+        const respuesta = await axios.get('api/empresas/'+nit+'/')
         // const { status } = respuesta
         console.log(respuesta)
 			  const { data } = respuesta
@@ -178,7 +190,7 @@ const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, 
         const id = (listaDatos.nit)
         //console.log(id)
         try {
-			const respuesta = await axios.put('/empresas/'+id+'/', listaDatos, {withCredentials: true})
+			const respuesta = await axios.put('/api/empresas/'+id+'/', listaDatos, {withCredentials: true})
 			const { status } = respuesta
 			if (status === 200){
 				alert("!!EL REGISTRO SE ACTUALIZO CORRECTAMENTE!!")
@@ -193,7 +205,7 @@ const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, 
     const deleteTodo = async id => {
 		if(window.confirm('ESTA SEGURO DE BORRAR ESTE REGISTRO?'))
 			try {
-				await axios.delete('/empresas/'+id+'/', {withCredentials: true})
+				await axios.delete('/api/empresas/'+id+'/', {withCredentials: true})
 				getLista()
 			} catch(err) {
 				console.log(err)
@@ -209,83 +221,54 @@ const GestionEmpresa = ({nit, ciuu, camara, razon_social, municipio, direccion, 
 return (
 
   <>
-  {/* <div >
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <Row className='"mb-2"'>
-      <Col sm="11">
-        <Button variant='success' type='submit' onClick={() => window.location.href="/AddEmpresa/"}>REGISTRAR DGA</Button>
-      </Col>
-      <Col sm="5">
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="basic-addon1" className="btn btn-info">< FaSearch /></InputGroup.Text>
-              <FormControl
-              placeholder="Búsqueda por Nombre o Empresa"
-              onChange={handleChangeBuscar}
-              aria-describedby="basic-addon1"
-            />
-          </InputGroup>
-      </Col>
-    </Row>
-	</div> */}
   
-  <div>
+  <div id='tabla1'>
   <div>
 				<br></br>	
 		<Row className='justify-content-center pt-2'>
 			<Col sm="8">
-          <Button variant='primary' type='submit' onClick={() => window.location.href="/AddEmpresa/"}><FaEdit /> REGISTRAR NUEVO DGA</Button>
-			</Col>
-			<Col sm="3">
-				<FormControl
-					placeholder="Búsqueda por Nombre o Empresa"
-					onChange={handleChangeBuscar}
-					aria-describedby="basic-addon1"
-        />
+          <Button variant='success' type='submit' onClick={() => navigate('/AddEmpresa')}><FaEdit /> REGISTRAR NUEVO DGA</Button>
 			</Col>
 		</Row>
 		
 			</div>
     <br></br>
-  <Row className='justify-content-center pt-11'>
-      <Col sm="11">
-        <Card className='p-11'>
-      <br />
-      
-      <table className="table table-striped bordered border-Secondary table-hover">
-        <thead >
-          <tr>
-            <th >NIT</th>
-            <th>RAZON SOCIAL</th>
-            <th>MUNICIPIO</th>
-            <th>DIRECCION</th>
-            <th>CORREO</th>
-            <th>NOMBRE REPRESENTANTE</th>
-            <th>ACCIONES</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lista.map((fila, index) => (
-            <tr key={index}>
-              <td>{fila.nit}</td>
-              <td>{fila.razon_social}</td>
-              <td>{fila.municipio}</td>
-              <td>{fila.direccion}</td>
-              <td>{fila.correo}</td>
-              <td>{fila.nombre_rep}</td>
-              <td><button className="btn btn-success" onClick={() => handleShow(fila.nit, fila.razon_social, fila.municipio, fila.direccion, fila.telefono, fila.correo, fila.cedula, fila.nombre_rep, fila.tipo_empresa)}> <FaPencilAlt /></button>{"  "}
-                <button className="btn btn-danger" onClick={() => deleteTodo(fila.nit)}> <FaTrashAlt /></button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      </Card>
-      </Col>
-    </Row>
-    
+    <MaterialTable
+          columns={columns}
+          data={data}
+          title="Empresas con DGA registrado en CVS"  
+          icons={tableIcons}
+          actions={[
+            {
+              icon: tableIcons.Edit,
+              tooltip: 'Editar DGA',
+              onClick: (event, rowData) => handleShow(rowData.nit)
+            },
+            {
+              icon: tableIcons.Delete,
+              tooltip: 'Eliminar Registro',
+              onClick: (event, rowData) => deleteTodo(rowData.nit),
+              //onClick: (event, rowData) => alert("Esta Seguro de Eliminar : " + rowData.nombre_mpio),
+            }
+          ]}
+          onRowClick={((evt, selectedRow) => setSelectedRow(selectedRow.tableData.id))}
+          options={{
+            actionsColumnIndex: -1,
+            headerStyle: {
+              backgroundColor: '#2471A3',
+              color: '#FFF'
+            },
+            rowStyle:  rowData => ({
+              backgroundColor: (selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
+            })}}
+          
+          localization={{
+            header:{
+              actions: "Acciones"
+            }            
+          }}
+        />
+         
       {/* Formulario modal para edicion de informacion */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

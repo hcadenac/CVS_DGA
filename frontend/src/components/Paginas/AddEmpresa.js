@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button, Card, Col, Container, Form, Row, Modal } from 'react-bootstrap'
 
@@ -36,7 +37,7 @@ const AddEmpresa = () => {
     const [show, setShow] = useState(false);
 	const [mensaje, setMensaje] = useState('');
 	const [color, setColor] = useState('');
-	//const [estado, setEstado] = useState('')
+	const navigate = useNavigate();
 
     const getLista = async () => {
 		try {
@@ -272,7 +273,7 @@ const AddEmpresa = () => {
 					</Row>
 						<br/>
 						<Button variant='primary' type='submit' >Adicionar Empresa</Button>{"   "}
-						<Button variant='danger' type='submit' onClick={() => window.location.href="/GestionEmpresa/"}>Cancelar</Button>
+						<Button variant='danger' type='submit' onClick={() => navigate('/GestionEmpresa')}>Cancelar</Button>
 						<br/>
 					</Form>
 					</Card>

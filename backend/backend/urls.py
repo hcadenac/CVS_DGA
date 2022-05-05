@@ -18,16 +18,18 @@ from django.urls import include, path
 from appMpio.views import UserCreate, LoginView, LogoutView
 from appMpio.urls import router
 from rest_framework.authtoken.views import obtain_auth_token
+from django.views.generic import TemplateView
 #from rest_framework import routers
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path("users/", UserCreate.as_view(), name="user_create"),
     path("auth/login/", LoginView.as_view(), name="login"),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
+    path('', TemplateView.as_view(template_name='index.html')),
     #path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     #path('api_autorization/', include('rest_framework.urls')),
     #path( 'api/' , include( 'authentication.urls' )),

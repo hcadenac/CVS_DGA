@@ -1,4 +1,5 @@
 import React from 'react';
+import imagen from '../img/gambiental.jpg';
 
 
 
@@ -7,9 +8,10 @@ const Inicio = () => {
     return (
         <div className='textdga'>
             <div id='imagenIncio'>
-            <img id ='imagen1' src="/gambiental.jpg" />
+            <img id ='imagen1' src={imagen} alt="aca esta una imagen"/>
             </div>
-            <h2 align="center">REGISTRO DEPARTAMENTOS DE GESTION AMBIENTAL DGA</h2>
+            <br></br>
+            <h2 id="text-titulo" align="center">REGISTRO DEPARTAMENTOS DE GESTION AMBIENTAL DGA</h2>
             <h3 id="text-titulo1">Generalidades</h3>
         <div>
         <p id="text-parrafo1">
@@ -24,7 +26,7 @@ const Inicio = () => {
 
 Principales funciones del departamento de gestión ambiental:
 </p>
-<ul>
+<ul id="text-parrafo1">
 <li>Establecer e implementar acciones encaminadas a dirigir la gestión ambiental de las empresas a nivel industrial,</li>
 <li>Velar por el cumplimiento de la normatividad ambiental,</li>
 <li>Prevenir, minimizar y controlar la generación de cargas contaminantes,</li>
@@ -37,7 +39,7 @@ Principales funciones del departamento de gestión ambiental:
 
 <h1 id="text-titulo1">Inscripción DGA</h1>
 
-<p>
+<p id="text-parrafo1">
     Una vez constituido el DGA, se debe informar a la CVS acerca de su creación; para facilitar a la corporación el registro correspondiente.
     Teniendo en cuenta lo anterior la Corporacion Autonoma Regional de los Valles de Sinu y San jorge, adoptó el formulario “registro de Departamento de Gestión Ambiental,  a través del cual los representantes legales de las empresas
     informan a la autoridad ambiental su conformación. 
